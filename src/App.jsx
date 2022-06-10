@@ -1,45 +1,28 @@
-import { useState } from 'react'
-import logo from './logo.svg'
-import './App.css'
+import { useState, useEffect } from "react";
+import { Heading, Image } from '@chakra-ui/react';
+import { LaunchItem } from "./components/LaunchItem";
+import * as API from "./services/launches";
+import logo from './assets/SpaceX-Logo.png';
 
-function App() {
-  const [count, setCount] = useState(0)
+
+export function App() {
+  const [launches, setLaunches] = useState([]);
+
+  useEffect(() => {
+    API.getAllLaunches().then(setLaunches);
+  }, []);
 
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>Hello Vite + React!</p>
-        <p>
-          <button type="button" onClick={() => setCount((count) => count + 1)}>
-            count is: {count}
-          </button>
-        </p>
-        <p>
-          Edit <code>App.jsx</code> and save to test HMR updates.
-        </p>
-        <p>
-          <a
-            className="App-link"
-            href="https://reactjs.org"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Learn React
-          </a>
-          {' | '}
-          <a
-            className="App-link"
-            href="https://vitejs.dev/guide/features.html"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Vite Docs
-          </a>
-        </p>
-      </header>
-    </div>
-  )
+    <>
+      <Image m={4} src={logo} width={300} />
+      <Heading as="h1" size="lg">
+        SpaceX Launches
+      </Heading>
+      <section>
+        {launches.map((launch) => (
+          <LaunchItem key={launch.flight_number} {...launch} />
+        ))}
+      </section>
+    </>
+  );
 }
-
-export default App
